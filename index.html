@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misión ESG SKLUM · Formación Interactiva</title>
+<style>
+  :root {
+    --primary: #15803d;
+    --primary-dark: #14532d;
+    --primary-bg: #f0fdf4;
+    --secondary: #0369a1;
+    --secondary-bg: #f0f9ff;
+    --accent: #d97706;
+    --accent-bg: #fffbeb;
+    --bg: #f1f5f9;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --border: #e2e8f0;
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+    --danger: #dc2626;
+    --danger-bg: #fee2e2;
+    --radius: 16px;
+    --shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 14px;
+    line-height: 1.5;
+  }
+
+  .app-shell {
+    width: 100%;
+    max-width: 960px;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  header {
+    background: linear-gradient(135deg, #064e3b 0%, #0f766e 100%);
+    color: #fff;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .badge-sklum {
+    background: rgba(255,255,255,0.18);
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+
+  header h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .streak-pill {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: none;
+  }
+
+  .timer-pill {
+    background: rgba(0, 0, 0, 0.32);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.98rem;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timer-pill.urgent {
+    background: var(--danger);
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+
+  .screen {
+    padding: 28px 26px;
+    display: none;
+  }
+
+  .screen.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+  }
+
+  .hero-desc {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-size: 0.96rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 640px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  input[type="email"], input[type="password"], input[type="text"], select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.96rem;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+  }
+
+  .error-text {
+    color: var(--danger);
+    font-size: 0.82rem;
+    margin-top: 5px;
+    display: none;
+  }
+
+  .admin-banner {
+    display: none;
+    background: #eff6ff;
+    border: 1.5px solid #93c5fd;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .blocks-title {
+    font-size: 1.02rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .blocks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .block-card {
+    border: 2px solid var(--border);
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+  }
+
+  .block-card:hover {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+    transform: translateY(-2px);
+  }
+
+  .block-card.selected {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+  }
+
+  .block-card.global {
+    border-color: #bae6fd;
+    background: var(--secondary-bg);
+  }
+
+  .block-card.global.selected {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+  }
+
+  .block-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.06);
+    margin-bottom: 6px;
+  }
+
+  .block-card h3 { font-size: 0.96rem; margin-bottom: 4px; color: var(--text-main); }
+  .block-card p { font-size: 0.82rem; color: var(--text-muted); }
+  .block-status { margin-top: 8px; font-size: 0.78rem; font-weight: 700; color: var(--primary-dark); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 10px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .btn:hover:not(:disabled) { background: var(--primary-dark); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-blue { background: var(--secondary); }
+  .btn-blue:hover:not(:disabled) { background: #075985; }
+  .btn-outline { background: #fff; color: var(--text-main); border: 1.5px solid #cbd5e1; }
+  .btn-outline:hover:not(:disabled) { background: #f8fafc; }
+  .btn-sm { padding: 9px 15px; font-size: 0.86rem; width: auto; }
+
+  .visual-card {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+
+  .visual-tag {
+    display: inline-block;
+    background: var(--primary-bg);
+    color: var(--primary-dark);
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
+  .visual-card h2 { font-size: 1.3rem; margin-bottom: 14px; }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .pillar-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    border-top: 4px solid var(--primary);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .pillar-box.s { border-top-color: var(--secondary); }
+  .pillar-box.g { border-top-color: var(--accent); }
+  .pillar-box h4 { font-size: 0.95rem; margin-bottom: 6px; }
+  .pillar-box p { font-size: 0.84rem; color: var(--text-muted); }
+
+  .pyramid-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0;
+  }
+  .pyr-level {
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.86rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .pyr-1 { width: 65%; background: #16a34a; }
+  .pyr-2 { width: 82%; background: #0284c7; }
+  .pyr-3 { width: 100%; background: #1e3a8a; }
+
+  @media (max-width: 600px) {
+    .pyr-1, .pyr-2, .pyr-3 { width: 100%; }
+  }
+
+  .game-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .mech-badge {
+    background: #ede9fe;
+    color: #5b21b6;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+  }
+
+  .progress-track {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .challenge-prompt {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+
+  .cards-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .choice-card {
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .choice-card:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-2px); }
+  .choice-card .c-icon { font-size: 1.5rem; }
+  .choice-card .c-title { font-weight: 700; font-size: 0.94rem; }
+  .choice-card.correct { background: var(--success-bg); border-color: var(--success); }
+  .choice-card.wrong { background: var(--danger-bg); border-color: var(--danger); }
+
+  .buckets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .bucket-btn {
+    background: #fff;
+    border: 2px dashed #94a3b8;
+    border-radius: 12px;
+    padding: 18px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .bucket-btn:hover:not(:disabled) { border-style: solid; border-color: var(--secondary); background: var(--secondary-bg); }
+  .bucket-btn .b-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+  .bucket-btn .b-label { font-weight: 800; font-size: 0.95rem; display: block; }
+  .bucket-btn .b-sub { font-size: 0.78rem; color: var(--text-muted); }
+  .bucket-btn.correct { border-style: solid; background: var(--success-bg); border-color: var(--success); }
+  .bucket-btn.wrong { border-style: solid; background: var(--danger-bg); border-color: var(--danger); }
+
+  .sort-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .sort-item {
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .sort-rank {
+    background: var(--secondary);
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+  }
+  .sort-controls { display: flex; gap: 6px; }
+  .move-btn { background: #e2e8f0; border: none; border-radius: 6px; width: 30px; height: 30px; font-weight: 800; cursor: pointer; }
+  .move-btn:hover:not(:disabled) { background: #cbd5e1; }
+
+  .tf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .tf-btn {
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #cbd5e1;
+    background: #f8fafc;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tf-btn.true-opt:hover:not(:disabled) { border-color: var(--success); background: var(--success-bg); }
+  .tf-btn.false-opt:hover:not(:disabled) { border-color: var(--danger); background: var(--danger-bg); }
+  .tf-btn.correct { background: var(--success-bg); border-color: var(--success); color: #14532d; }
+  .tf-btn.wrong { background: var(--danger-bg); border-color: var(--danger); color: #7f1d1d; }
+
+  .feedback-panel {
+    display: none;
+    padding: 15px 18px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    border-left: 5px solid;
+    font-size: 0.92rem;
+  }
+  .feedback-panel.ok { background: var(--success-bg); border-color: var(--success); color: #14532d; }
+  .feedback-panel.ko { background: var(--danger-bg); border-color: var(--danger); color: #7f1d1d; }
+
+  .result-hero {
+    text-align: center;
+    background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 18px;
+  }
+  .score-big { font-size: 3.2rem; font-weight: 900; color: var(--primary-dark); line-height: 1.1; }
+
+  .sync-status {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    background: #f0f9ff;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+  }
+  .sync-status.ok { background: var(--success-bg); color: #14532d; border-color: #86efac; }
+  .sync-status.err { background: var(--accent-bg); color: #92400e; border-color: #fde68a; }
+
+  .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .action-buttons { grid-template-columns: 1fr; } }
+
+  /* DASHBOARD ADMIN */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .kpi-card {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .kpi-val { font-size: 1.7rem; font-weight: 900; color: var(--secondary); }
+  .kpi-lbl { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+
+  .filters-bar {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr auto;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: end;
+  }
+  @media (max-width: 720px) { .filters-bar { grid-template-columns: 1fr; } }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: #f1f5f9; font-weight: 700; }
+
+  /* MODAL DETALLE DE RESPUESTAS */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 999;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal-box {
+    background: #fff;
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+  }
+  .ans-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    border-left: 4px solid;
+  }
+  .ans-item.ok { background: #f0fdf4; border-color: var(--success); }
+  .ans-item.ko { background: #fef2f2; border-color: var(--danger); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <header>
+    <div class="header-left">
+      <span class="badge-sklum">SKLUM ESG</span>
+      <h1>Misión Sostenibilidad en Acción</h1>
+    </div>
+    <div class="header-right">
+      <div class="streak-pill" id="streakPill">🔥 Racha: 0</div>
+      <div class="timer-pill" id="timerPill">
+        <span id="phaseIcon">📘</span>
+        <span id="timerText">03:00</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. PANTALLA INICIO -->
+  <section id="introScreen" class="screen active">
+    <h2 class="hero-title">Entrena tu criterio ESG por bloques</h2>
+    <p class="hero-desc">
+      Introduce tu correo corporativo, elige un bloque temático (o el reto global) y supera una cápsula visual de 3 min + retos interactivos aleatorios. Al terminar recibirás tu certificado automáticamente en tu correo.
+    </p>
+
+    <div class="form-row">
+      <div>
+        <label for="emailInput">Correo electrónico corporativo *</label>
+        <input type="email" id="emailInput" placeholder="nombre.apellido@sklum.com" required>
+        <div class="error-text" id="emailErr">Por favor, introduce un correo electrónico válido (@sklum.com).</div>
+      </div>
+      <div>
+        <label for="deptSelect">Área / Departamento *</label>
+        <select id="deptSelect">
+          <option value="Punto de Venta / Tienda">Punto de Venta / Tienda</option>
+          <option value="Almacén y Logística">Almacén y Logística</option>
+          <option value="Compras y Proveedores">Compras y Proveedores</option>
+          <option value="Atención al Cliente">Atención al Cliente</option>
+          <option value="Marketing y E-commerce">Marketing y E-commerce</option>
+          <option value="IT / Tecnología">IT / Tecnología</option>
+          <option value="RRHH y Finanzas">RRHH y Finanzas</option>
+          <option value="Oficinas Centrales">Oficinas Centrales</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Banner exclusivo que solo aparece cuando se escribe carlos.morant@sklum.com -->
+    <div class="admin-banner" id="adminQuickBanner">
+      <div>
+        <strong style="color:#1e40af; font-size:0.92rem;">👋 Hola Carlos (Administrador ESG)</strong>
+        <p style="font-size:0.8rem; color:#475569;">Tienes acceso exclusivo al panel global de respuestas y puntuaciones.</p>
+      </div>
+      <button type="button" class="btn btn-blue btn-sm" id="openAdminLoginBtn">🔐 Abrir Dashboard Admin</button>
+    </div>
+
+    <div class="blocks-title">Selecciona el bloque que quieres entrenar ahora:</div>
+    <div class="blocks-grid" id="blocksGrid"></div>
+
+    <button type="button" class="btn" id="startMissionBtn">Comenzar Bloque Seleccionado ▶</button>
+  </section>
+
+  <!-- 2. FASE 1: CÁPSULA VISUAL -->
+  <section id="briefingScreen" class="screen">
+    <div class="visual-card" id="visualSlideContainer"></div>
+    <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <button type="button" class="btn btn-outline btn-sm" id="backToBlocksBtn">← Cambiar bloque</button>
+      <button type="button" class="btn btn-blue btn-sm" id="goToGameBtn">¡Empezar Retos del Bloque! 🎮</button>
+    </div>
+  </section>
+
+  <!-- 3. FASE 2: JUEGO INTERACTIVO -->
+  <section id="quizScreen" class="screen">
+    <div class="game-top-bar">
+      <span id="qProgressLabel">Reto 1 de 6</span>
+      <span class="mech-badge" id="mechBadge">Clasificador</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="quizProgressFill"></div>
+    </div>
+
+    <div class="challenge-prompt" id="challengePrompt"></div>
+    <div id="interactiveArea"></div>
+
+    <div class="feedback-panel" id="feedbackPanel">
+      <strong id="fbTitle" style="display:block; margin-bottom:4px;"></strong>
+      <span id="fbBody"></span>
+    </div>
+
+    <button type="button" class="btn" id="nextChallengeBtn" style="display:none;">Siguiente reto →</button>
+  </section>
+
+  <!-- 4. PANTALLA RESULTADOS Y ENVÍO REAL -->
+  <section id="resultScreen" class="screen">
+    <div class="result-hero">
+      <span class="badge-sklum" style="background:var(--primary); color:#fff;" id="finalRank">Agente ESG</span>
+      <div class="score-big"><span id="finalScoreVal">0</span> / 100</div>
+      <p style="color:var(--text-muted); margin-top:6px; font-size:0.92rem;" id="finalSummaryMeta"></p>
+    </div>
+
+    <div class="sync-status" id="syncStatusBox">
+      ⏳ Guardando resultados y enviando certificado a tu correo...
+    </div>
+
+    <div class="action-buttons">
+      <button type="button" class="btn btn-blue" id="resendEmailBtn">📧 Reenviar certificado a mi correo</button>
+      <button type="button" class="btn" id="repeatNewQuestionsBtn">🔄 Repetir con OTRAS preguntas</button>
+    </div>
+    <div style="margin-top:12px;">
+      <button type="button" class="btn btn-outline" id="chooseAnotherBlockBtn">📚 Elegir otro bloque temático</button>
+    </div>
+  </section>
+
+  <!-- 5. DASHBOARD EXCLUSIVO CARLOS MORANT -->
+  <section id="adminScreen" class="screen">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+      <div>
+        <h2 style="font-size:1.4rem;">📊 Dashboard Global ESG · SKLUM</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Acceso exclusivo: <strong>carlos.morant@sklum.com</strong></p>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-blue btn-sm" id="refreshAdminBtn">🔄 Actualizar</button>
+        <button type="button" class="btn btn-outline btn-sm" id="exitAdminBtn">← Volver a Formación</button>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiTotal">0</div>
+        <div class="kpi-lbl">Partidas completadas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiUsers">0</div>
+        <div class="kpi-lbl">Personas únicas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiAvg">0</div>
+        <div class="kpi-lbl">Nota media (/100)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiPass">0%</div>
+        <div class="kpi-lbl">Aptos (≥70 pts)</div>
+      </div>
+    </div>
+
+    <div class="filters-bar">
+      <div>
+        <label for="filterEmail">Buscar por correo</label>
+        <input type="text" id="filterEmail" placeholder="ej. ana.garcia@sklum.com">
+      </div>
+      <div>
+        <label for="filterDept">Filtrar por Área</label>
+        <select id="filterDept">
+          <option value="">Todas las áreas</option>
+          <option value="Punto de Venta / Tienda">Punto de Venta / Tienda</option>
+          <option value="Almacén y Logística">Almacén y Logística</option>
+          <option value="Compras y Proveedores">Compras y Proveedores</option>
+          <option value="Atención al Cliente">Atención al Cliente</option>
+          <option value="Marketing y E-commerce">Marketing y E-commerce</option>
+          <option value="IT / Tecnología">IT / Tecnología</option>
+          <option value="RRHH y Finanzas">RRHH y Finanzas</option>
+          <option value="Oficinas Centrales">Oficinas Centrales</option>
+        </select>
+      </div>
+      <div>
+        <label for="filterBlock">Filtrar por Bloque</label>
+        <select id="filterBlock">
+          <option value="">Todos los bloques</option>
+          <option value="Bloque 1">Bloque 1</option>
+          <option value="Bloque 2">Bloque 2</option>
+          <option value="Bloque 3">Bloque 3</option>
+          <option value="Bloque 4">Bloque 4</option>
+          <option value="Bloque 5">Bloque 5</option>
+          <option value="Reto Global">Reto Global</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-blue btn-sm" id="exportCsvBtn">⬇️ Exportar Excel (CSV)</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Correo</th>
+            <th>Área</th>
+            <th>Bloque</th>
+            <th>Nota</th>
+            <th>Respuestas</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL PARA VER LAS RESPUESTAS DE CADA PERSONA -->
+<div class="modal-backdrop" id="detailModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 id="modalTitle" style="font-size:1.1rem;">Detalle de respuestas</h3>
+      <button type="button" class="btn btn-outline btn-sm" id="closeModalBtn">✕ Cerrar</button>
+    </div>
+    <p id="modalSub" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;"></p>
+    <div id="modalAnswersList"></div>
+  </div>
+</div>
+
+<script>
+// =========================================================================
+// CONFIGURACIÓN DE CONEXIÓN CON GOOGLE APPS SCRIPT
+// Pega aquí la URL /exec que te da Google Apps Script en el Paso 1
+// =========================================================================
+const API_URL = "https://script.google.com/a/macros/sklum.com/s/AKfycbw95A4ZpdA1U4U7ZR5hIR8rhYSUZTfn-AMZfuJ0zQHwi8scWkD3srRMCWgDEx9sH7YYxA/exec";
+const ADMIN_EMAIL = "carlos.morant@sklum.com";
+const REQUIRE_SKLUM_DOMAIN = false; // Ponlo en true si quieres obligar a que todos usen @sklum.com
+const LOCAL_PROGRESS_KEY = "sklum_esg_my_progress_v5";
+
+// =========================================================================
+// BLOQUES Y CONTENIDO VISUAL
+// =========================================================================
+const BLOCKS = [
+  {
+    id: 1,
+    badge: "Bloque 1",
+    title: "El Tablero ESG y Normativa",
+    desc: "ESG vs. RSE, pilares Ambiental-Social-Gobernanza, CSRD y caso de negocio.",
+    visualTag: "Cápsula Visual · Bloque 1",
+    visualTitle: "De la RSE puntual al ESG auditado y competitivo",
+    visualHtml: `
+      <p style="font-size:0.92rem; color:var(--text-muted); margin-bottom:12px;">
+        La <strong>RSE tradicional</strong> eran donaciones aisladas de imagen. El <strong>ESG</strong> integra indicadores medibles en compras, ventas y finanzas, impulsado por la directiva europea <strong>CSRD</strong>.
+      </p>
+      <div class="pillars-grid">
+        <div class="pillar-box">
+          <h4>🌱 E · Ambiental</h4>
+          <p>Huella de carbono, energía eléctrica, gestión de residuos y certificaciones forestales.</p>
+        </div>
+        <div class="pillar-box s">
+          <h4>🤝 S · Social</h4>
+          <p>Ergonomía en tienda, salud psicosocial, clima laboral y Diversidad, Equidad e Inclusión (DEI).</p>
+        </div>
+        <div class="pillar-box g">
+          <h4>⚖️ G · Gobernanza</h4>
+          <p>Control interno en caja y compras, prevención de fraude y Canal Ético confidencial.</p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 2,
+    badge: "Bloque 2",
+    title: "Huella de Carbono y Residuos",
+    desc: "Alcances 1, 2 y 3, jerarquía reducir-mitigar-compensar y reciclaje en tienda.",
+    visualTag: "Cápsula Visual · Bloque 2",
+    visualTitle: "Pirámide de Alcances y Jerarquía de Compras/Residuos",
+    visualHtml: `
+      <div class="pyramid-stack">
+        <div class="pyr-level pyr-1"><span>ALCANCE 1 (Directo)</span><span>Calderas y furgonetas propias</span></div>
+        <div class="pyr-level pyr-2"><span>ALCANCE 2 (Energía)</span><span>Electricidad comprada (luz, clima)</span></div>
+        <div class="pyr-level pyr-3"><span>ALCANCE 3 (70-80% del total)</span><span>Compras, transporte, residuos y commuting</span></div>
+      </div>
+      <p style="font-size:0.9rem; background:#fff; padding:12px; border-radius:8px; border-left:4px solid var(--primary);">
+        <strong>Regla de oro:</strong> 1º <strong>Reducir en origen</strong> → 2º <strong>Mitigar</strong> → 3º <strong>Compensar</strong> al final (evitando <em>greenwashing</em>). En residuos, separar limpio en origen evita contaminar lotes enteros.
+      </p>
+    `
+  },
+  {
+    id: 3,
+    badge: "Bloque 3",
+    title: "Movilidad Laboral y Viajes",
+    desc: "Commuting diario, teletrabajo real, intermodalidad y pirámide de viajes.",
+    visualTag: "Cápsula Visual · Bloque 3",
+    visualTitle: "Cómo nos desplazamos sin disparar el Alcance 3",
+    visualHtml: `
+      <div class="pillars-grid">
+        <div class="pillar-box">
+          <h4>🚗 Commuting (200+ días/año)</h4>
+          <p>Compartir coche (carpooling), transporte público o bici reduce emisiones por pasajero.</p>
+        </div>
+        <div class="pillar-box s">
+          <h4>🏠 Teletrabajo vs. Oficina</h4>
+          <p>El teletrabajo traslada el consumo al hogar: ahorra si evita coche en solitario, pero depende del aislamiento de la vivienda.</p>
+        </div>
+        <div class="pillar-box g">
+          <h4>✈️ Jerarquía de Viajes</h4>
+          <p><strong>1º Videoconferencia</strong><br><strong>2º Tren</strong> (corta/media distancia)<br><strong>3º Avión</strong> (solo larga distancia).</p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 4,
+    badge: "Bloque 4",
+    title: "Oficina Circular y Digital",
+    desc: "Sellos FSC/PEFC, energía fantasma, reciclaje RAEE y nube.",
+    visualTag: "Cápsula Visual · Bloque 4",
+    visualTitle: "Trazabilidad Forestal, Consumo Fantasma y Huella Digital",
+    visualHtml: `
+      <div class="pillars-grid">
+        <div class="pillar-box">
+          <h4>🌲 Sellos FSC y PEFC</h4>
+          <p>Garantizan trazabilidad bosque-producto con código verificable. Son un argumento clave de venta B2B.</p>
+        </div>
+        <div class="pillar-box s">
+          <h4>🔌 Energía Fantasma y RAEE</h4>
+          <p>Equipos en <em>standby</em> gastan Alcance 2. Reacondiciona portátiles antes de llevarlos a gestor autorizado <strong>RAEE</strong>.</p>
+        </div>
+        <div class="pillar-box g">
+          <h4>☁️ Correo y Nube</h4>
+          <p>Enviar enlaces compartidos en vez de adjuntos pesados evita copias duplicadas en servidores activos 24/7.</p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 5,
+    badge: "Bloque 5",
+    title: "Dimensión Social y Gobernanza",
+    desc: "Bienestar y ergonomía en tienda, DEI en mostrador, Folio en Blanco y Canal Ético.",
+    visualTag: "Cápsula Visual · Bloque 5",
+    visualTitle: "Personas, Equidad en el Mostrador y Cultura de Confianza",
+    visualHtml: `
+      <div class="pillars-grid">
+        <div class="pillar-box">
+          <h4>🧘 Bienestar en Tienda</h4>
+          <p>Cimientos físicos (ergonomía, postura, micropausas de 30s) y turnos previsibles antes que eslóganes.</p>
+        </div>
+        <div class="pillar-box s">
+          <h4>🌈 DEI en Acción</h4>
+          <p><strong>Diversidad</strong> (somos distintos), <strong>Equidad</strong> (dar acceso adaptado), <strong>Inclusión</strong> (trato natural y acogedor).</p>
+        </div>
+        <div class="pillar-box g">
+          <h4>🛡️ Folio en Blanco</h4>
+          <p>Si no puedes documentar una decisión ante un auditor, no la tomes. Reporta sin miedo en el <strong>Canal Ético</strong>.</p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 0,
+    badge: "Reto Global",
+    title: "Misión Completa (Los 5 Bloques)",
+    desc: "Mezcla aleatoria de 10 retos de todas las unidades para certificación completa.",
+    isGlobal: true,
+    visualTag: "Cápsula Visual · Resumen Global ESG",
+    visualTitle: "Las 5 claves de Sostenibilidad Corporativa en SKLUM",
+    visualHtml: `
+      <div class="pillars-grid">
+        <div class="pillar-box">
+          <h4>1. Tablero ESG y Huella</h4>
+          <p>Datos auditables (CSRD). Priorizar <strong>Reducir</strong> antes que compensar en Alcances 1, 2 y 3.</p>
+        </div>
+        <div class="pillar-box s">
+          <h4>2. Movilidad y Circularidad</h4>
+          <p>Videollamada > Tren > Avión. Sellos <strong>FSC/PEFC</strong>, apagar standby, reacondicionar RAEE y usar enlaces nube.</p>
+        </div>
+        <div class="pillar-box g">
+          <h4>3. Social y Gobernanza</h4>
+          <p>Ergonomía, <strong>Equidad e Inclusión</strong> en mostrador, regla del Folio en Blanco y Canal Ético.</p>
+        </div>
+      </div>
+    `
+  }
+];
+
+// =========================================================================
+// BANCO DE 40 PREGUNTAS INTERACTIVAS
+// =========================================================================
+const QUESTION_POOL = [
+  {
+    id: "b1_1", unit: 1, type: "bucket", mechLabel: "🗂️ Clasificador ESG",
+    prompt: "Finanzas detecta pagos sin doble verificación y facturas sin aprobar. Aunque la tienda recicla cartón, ¿qué pilar falla?",
+    buckets: [
+      { id: "E", icon: "🌱", label: "Ambiental (E)", sub: "Recursos y emisiones" },
+      { id: "S", icon: "🤝", label: "Social (S)", sub: "Personas y clima" },
+      { id: "G", icon: "⚖️", label: "Gobernanza (G)", sub: "Control, ética y reglas" }
+    ],
+    correctId: "G",
+    explanation: "La Gobernanza (G) define el control interno y la transparencia. Es lo primero que revisan bancos y auditores."
+  },
+  {
+    id: "b1_2", unit: 1, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«La directiva europea CSRD equipara el rigor del reporte de sostenibilidad al de las cuentas financieras y traslada exigencias a toda la cadena de proveedores.»",
+    isTrue: true,
+    explanation: "REALIDAD: Aunque una empresa no reporte directamente hoy, sus clientes corporativos le pedirán datos verificables mediante cuestionarios y contratos."
+  },
+  {
+    id: "b1_3", unit: 1, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Donar juguetes en Navidad a una ONG local sin medir ni cambiar los procesos de compra o residuos se considera estrategia ESG integral.»",
+    isTrue: false,
+    explanation: "MITO: Eso es RSE tradicional (voluntaria y puntual). El ESG exige métricas sistemáticas integradas en la operativa."
+  },
+  {
+    id: "b1_4", unit: 1, type: "cards", mechLabel: "💼 Caso de Negocio",
+    prompt: "¿Qué ventaja financiera directa obtiene una empresa con buen expediente ESG auditado?",
+    options: [
+      { icon: "🏦", title: "Líneas de crédito vinculadas a sostenibilidad con mejores tipos de interés." },
+      { icon: "🧾", title: "Exención legal de presentar cuentas anuales." },
+      { icon: "📦", title: "Permiso para vender sin trazabilidad de materiales." }
+    ],
+    correctIdx: 0,
+    explanation: "Bancos e inversores evalúan el riesgo ESG igual que la morosidad: un buen desempeño reduce el coste de financiación."
+  },
+  {
+    id: "b1_5", unit: 1, type: "bucket", mechLabel: "🗂️ Clasificador ESG",
+    prompt: "RRHH implanta un plan de mentoring con métricas para corregir diferencias de promoción interna. ¿Qué pilar activa?",
+    buckets: [
+      { id: "E", icon: "🌱", label: "Ambiental (E)", sub: "Impacto ecológico" },
+      { id: "S", icon: "🤝", label: "Social (S)", sub: "Equidad y plantilla" },
+      { id: "G", icon: "⚖️", label: "Gobernanza (G)", sub: "Auditoría financiera" }
+    ],
+    correctId: "S",
+    explanation: "El pilar Social (S) mide de forma sostenida la igualdad de oportunidades, salud y bienestar de la plantilla."
+  },
+  {
+    id: "b1_6", unit: 1, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Un buen desempeño ESG ayuda a atraer y retener talento cualificado, reduciendo los costes de selección y rotación.»",
+    isTrue: true,
+    explanation: "REALIDAD: A igualdad salarial, los profesionales eligen organizaciones coherentes con canales éticos activos y compromisos verificables."
+  },
+  {
+    id: "b1_7", unit: 1, type: "cards", mechLabel: "🇪🇺 Normativa Europea",
+    prompt: "¿Para qué sirve la Taxonomía Europea en sostenibilidad corporativa?",
+    options: [
+      { icon: "📐", title: "Define con criterios técnicos qué actividades económicas son realmente sostenibles." },
+      { icon: "💶", title: "Fija los precios máximos del mobiliario en tiendas de la UE." },
+      { icon: "🏷️", title: "Sustituye los sellos forestales FSC y PEFC." }
+    ],
+    correctIdx: 0,
+    explanation: "La Taxonomía Europea establece un lenguaje técnico común para evitar el greenwashing en toda la Unión Europea."
+  },
+  {
+    id: "b1_8", unit: 1, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Una empresa con excelente gestión ambiental pero escándalos de corrupción sigue manteniendo intacta su calificación ESG.»",
+    isTrue: false,
+    explanation: "MITO: Los tres pilares son inseparables; un fallo grave de Gobernanza arruina la reputación y el acceso a financiación."
+  },
+  {
+    id: "b2_1", unit: 2, type: "bucket", mechLabel: "🏭 Clasificador de Alcances",
+    prompt: "La iluminación LED y el aire acondicionado eléctrico de la tienda funcionan durante toda la jornada. ¿Qué alcance es?",
+    buckets: [
+      { id: "A1", icon: "🔥", label: "Alcance 1", sub: "Combustión propia" },
+      { id: "A2", icon: "⚡", label: "Alcance 2", sub: "Electricidad comprada" },
+      { id: "A3", icon: "🚚", label: "Alcance 3", sub: "Cadena de valor" }
+    ],
+    correctId: "A2",
+    explanation: "El Alcance 2 recoge la electricidad comprada que consume la empresa aunque la genere una central externa."
+  },
+  {
+    id: "b2_2", unit: 2, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«En empresas de comercio y retail, el Alcance 3 (compras, logística, residuos y commuting) suele representar entre el 70% y el 80% de las emisiones totales.»",
+    isTrue: true,
+    explanation: "REALIDAD: Es la base más ancha del iceberg en empresas de servicios y retail, y donde las decisiones diarias tienen más impacto."
+  },
+  {
+    id: "b2_3", unit: 2, type: "sort", mechLabel: "📶 Ordena la Jerarquía",
+    prompt: "Ordena de MAYOR a MENOR prioridad las acciones de Compras frente a la huella de carbono:",
+    items: [
+      "1º Evitar y reducir en origen (proveedores certificados FSC/PEFC)",
+      "2º Mitigar lo restante (agrupar pedidos y optimizar transporte)",
+      "3º Compensar con bonos de carbono solo el residuo inevitable"
+    ],
+    explanation: "Primero se reduce en origen, luego se mitiga y solo al final se compensa. Invertir este orden es riesgo de greenwashing."
+  },
+  {
+    id: "b2_4", unit: 2, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Tirar un envase de yogur con restos dentro del contenedor azul de papel no importa porque la planta lo limpia automáticamente.»",
+    isTrue: false,
+    explanation: "MITO: Contaminar fracciones en origen hace que las plantas rechacen el lote completo y lo envíen a vertedero."
+  },
+  {
+    id: "b2_5", unit: 2, type: "bucket", mechLabel: "🏭 Clasificador de Alcances",
+    prompt: "Una furgoneta propiedad de la empresa reparte mercancía quemando gasoil. ¿En qué alcance entra?",
+    buckets: [
+      { id: "A1", icon: "🔥", label: "Alcance 1", sub: "Fuentes propias/controladas" },
+      { id: "A2", icon: "⚡", label: "Alcance 2", sub: "Red eléctrica" },
+      { id: "A3", icon: "🚚", label: "Alcance 3", sub: "Terceros" }
+    ],
+    correctId: "A1",
+    explanation: "El Alcance 1 incluye las emisiones directas de vehículos propios y calderas de la empresa."
+  },
+  {
+    id: "b2_6", unit: 2, type: "bucket", mechLabel: "♻️ Clasificador de Residuos",
+    prompt: "Al recibir mercancía en almacén, retiras el film plástico limpio del palé. ¿A qué contenedor va?",
+    buckets: [
+      { id: "AZUL", icon: "📦", label: "Papel / Cartón", sub: "Contenedor azul" },
+      { id: "AMARILLO", icon: "🧴", label: "Envases y Plásticos", sub: "Contenedor amarillo" },
+      { id: "RESTO", icon: "🗑️", label: "Fracción Resto", sub: "Contenedor gris" }
+    ],
+    correctId: "AMARILLO",
+    explanation: "El film plástico y flejes limpios van al contenedor amarillo para reciclarse como materia prima secundaria."
+  },
+  {
+    id: "b2_7", unit: 2, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Eliminar plásticos de un solo uso en cafeterías y comedores reduce tanto los residuos como las emisiones de fabricación y transporte en Alcance 3.»",
+    isTrue: true,
+    explanation: "REALIDAD: Evitar que el material entre en el circuito de compras elimina todas las emisiones previas de su ciclo de vida."
+  },
+  {
+    id: "b2_8", unit: 2, type: "cards", mechLabel: "📦 Gestión Circular",
+    prompt: "¿Cuál es la acción más eficaz antes de tirar cajas de cartón en buen estado en la trastienda?",
+    options: [
+      { icon: "🔄", title: "Reutilizarlas para devoluciones o envíos internos antes de reciclarlas." },
+      { icon: "🔥", title: "Quemarlas para valorización energética directa." },
+      { icon: "🗑️", title: "Mezclarlas con el resto de basura para ahorrar bolsas." }
+    ],
+    correctIdx: 0,
+    explanation: "Reutilizar alarga la vida útil del material y reduce la compra de nuevo embalaje."
+  },
+  {
+    id: "b3_1", unit: 3, type: "sort", mechLabel: "📶 Pirámide de Viajes",
+    prompt: "Ordena de PRIMERA a ÚLTIMA opción la jerarquía de viajes corporativos sostenibles:",
+    items: [
+      "Videoconferencia (evita el desplazamiento físico)",
+      "Tren en distancias cortas y medias (competitivo puerta a puerta)",
+      "Avión reservado solo para larga distancia sin alternativa ferroviaria"
+    ],
+    explanation: "Siempre preguntamos primero si basta una videollamada; si hace falta viajar, priorizamos tren sobre avión."
+  },
+  {
+    id: "b3_2", unit: 3, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«El commuting diario (ir y volver del trabajo) forma parte del Alcance 3 y se repite entre 200 y 220 días laborables al año por persona.»",
+    isTrue: true,
+    explanation: "REALIDAD: Aunque ocurre fuera de la oficina, es una fuente acumulativa muy relevante dentro del Alcance 3."
+  },
+  {
+    id: "b3_3", unit: 3, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Teletrabajar reduce siempre la huella de carbono en todos los casos, incluso si antes ibas andando y en casa pones calefacción solo para ti en un piso mal aislado.»",
+    isTrue: false,
+    explanation: "MITO: El teletrabajo traslada el consumo energético al hogar; el balance real depende del aislamiento de la vivienda y del transporte evitado."
+  },
+  {
+    id: "b3_4", unit: 3, type: "cards", mechLabel: "🚘 Equipo en Tienda",
+    prompt: "Cuatro compañeros viven en el mismo barrio y comparten turno de mañana. ¿Qué reduce más su huella?",
+    options: [
+      { icon: "🚗", title: "Organizar coche compartido rotativo (divide emisiones por 4 y ahorra combustible)." },
+      { icon: "🏎️", title: "Ir en 4 coches separados pero llegar 10 minutos antes." },
+      { icon: "✈️", title: "No hacer nada porque el commuting no cuenta en ESG." }
+    ],
+    correctIdx: 0,
+    explanation: "El carpooling reduce drásticamente las emisiones por pasajero y los costes individuales."
+  },
+  {
+    id: "b3_5", unit: 3, type: "bucket", mechLabel: "🧭 Movilidad Inteligente",
+    prompt: "Dejas el coche en un aparcamiento disuasorio a las afueras y entras al centro en metro. ¿Cómo se llama?",
+    buckets: [
+      { id: "INTER", icon: "🔄", label: "Intermodalidad", sub: "Combinar medios eficientes" },
+      { id: "MICRO", icon: "🚲", label: "Micromovilidad", sub: "Solo bici o patinete" },
+      { id: "A1", icon: "🏭", label: "Alcance 1", sub: "Flota propia" }
+    ],
+    correctId: "INTER",
+    explanation: "La intermodalidad combina flexibilidad en el primer tramo y bajo impacto en el tramo urbano."
+  },
+  {
+    id: "b3_6", unit: 3, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«En trayectos de 2 a 3 horas de tren centro-centro, el tiempo total puerta a puerta suele ser similar al del avión pero con muchas menos emisiones.»",
+    isTrue: true,
+    explanation: "REALIDAD: Al evitar traslados a aeropuertos periféricos y controles de seguridad, el tren es competitivo y permite trabajar durante el viaje."
+  },
+  {
+    id: "b3_7", unit: 3, type: "cards", mechLabel: "🌍 Feria Internacional",
+    prompt: "Debes asistir a una feria internacional en otro continente donde no hay alternativa ferroviaria. ¿Qué criterio ESG aplicas?",
+    options: [
+      { icon: "📅", title: "Viajar en avión de forma justificada agrupando varias reuniones en la misma agenda." },
+      { icon: "🚫", title: "Cancelar toda actividad comercial internacional." },
+      { icon: "✈️", title: "Hacer tres viajes separados en el mismo mes por comodidad." }
+    ],
+    correctIdx: 0,
+    explanation: "El avión se reserva para larga distancia justificada, optimizando agendas para minimizar el número de vuelos."
+  },
+  {
+    id: "b3_8", unit: 3, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Una oficina moderna con climatización centralizada e iluminación LED puede ser más eficiente por persona que cientos de hogares calefactados por separado.»",
+    isTrue: true,
+    explanation: "REALIDAD: En épocas de frío o calor extremo, climatizar un edificio eficiente compartido consume menos energía per cápita que viviendas antiguas dispersas."
+  },
+  {
+    id: "b4_1", unit: 4, type: "cards", mechLabel: "🛋️ Venta B2B en Tienda",
+    prompt: "Un cliente corporativo pregunta por el origen de la madera de una estantería SKLUM. ¿Cómo respondes con criterio ESG?",
+    options: [
+      { icon: "🌲", title: "Le indicas el sello FSC/PEFC y su código de licencia verificable, garantizando gestión forestal responsable." },
+      { icon: "🎨", title: "Le dices que el sello verde es solo estético y no tiene trazabilidad." },
+      { icon: "🤫", title: "Le cambias de tema porque eso solo lo sabe el departamento legal." }
+    ],
+    correctIdx: 0,
+    explanation: "FSC y PEFC tienen códigos de licencia verificables y son un argumento comercial decisivo ante clientes que auditan proveedores."
+  },
+  {
+    id: "b4_2", unit: 4, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Los monitores en standby, cargadores enchufados e impresoras en espera generan 'energía fantasma' que suma en el Alcance 2.»",
+    isTrue: true,
+    explanation: "REALIDAD: El vampire power consume electricidad las 24 horas del día aunque los equipos parezcan apagados."
+  },
+  {
+    id: "b4_3", unit: 4, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Cuando un portátil corporativo deja de usarse en ventas pero funciona bien, lo más ecológico es tirarlo al contenedor amarillo.»",
+    isTrue: false,
+    explanation: "MITO: Primero debe reacondicionarse para alargar su vida útil; y al final de su vida útil va a un gestor autorizado RAEE, nunca a basura ordinaria."
+  },
+  {
+    id: "b4_4", unit: 4, type: "cards", mechLabel: "☁️ Limpieza Digital",
+    prompt: "Quieres compartir una presentación pesada con fotos HD con 12 compañeros. ¿Qué práctica reduce la huella digital?",
+    options: [
+      { icon: "🔗", title: "Guardar el archivo en la nube corporativa y enviar únicamente el enlace." },
+      { icon: "📎", title: "Adjuntar el archivo pesado en el correo para que se duplique 12 veces." },
+      { icon: "🖨️", title: "Imprimirlo en color para cada compañero." }
+    ],
+    correctIdx: 0,
+    explanation: "Los correos con adjuntos pesados multiplican copias en servidores de centros de datos que consumen electricidad continuamente."
+  },
+  {
+    id: "b4_5", unit: 4, type: "bucket", mechLabel: "🔌 Clasificador Oficina",
+    prompt: "Cables viejos, ratones rotos y móviles corporativos en desuso. ¿Cómo se clasifican?",
+    buckets: [
+      { id: "RAEE", icon: "💻", label: "Residuos RAEE", sub: "Gestor autorizado electrónico" },
+      { id: "AMARILLO", icon: "🧴", label: "Envases", sub: "Contenedor amarillo" },
+      { id: "AZUL", icon: "📦", label: "Papel / Cartón", sub: "Contenedor azul" }
+    ],
+    correctId: "RAEE",
+    explanation: "Los Residuos de Aparatos Eléctricos y Electrónicos (RAEE) requieren gestores especializados con trazabilidad."
+  },
+  {
+    id: "b4_6", unit: 4, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Comprar papel sin certificar un 3% más barato puede generar un pasivo oculto al no poder documentar gestión forestal responsable en Alcance 3.»",
+    isTrue: true,
+    explanation: "REALIDAD: El precio de lista no refleja el coste total; sin certificación FSC/PEFC el riesgo reputacional recae sobre la empresa compradora."
+  },
+  {
+    id: "b4_7", unit: 4, type: "sort", mechLabel: "♻️ Ciclo de Hardware",
+    prompt: "Ordena de MEJOR a ÚLTIMO paso la gestión circular de un ordenador de oficina:",
+    items: [
+      "1º Reacondicionar y redistribuir a otro puesto con menores exigencias",
+      "2º Donar a proyecto social tras borrado seguro certificado",
+      "3º Entregar a gestor autorizado RAEE para recuperar metales y componentes"
+    ],
+    explanation: "Alargar la vida útil evita las emisiones de fabricar un equipo nuevo; el reciclaje RAEE es el cierre final del ciclo."
+  },
+  {
+    id: "b4_8", unit: 4, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Los proveedores con certificación FSC o PEFC siempre tardan el doble en entregar pedidos que los tradicionales.»",
+    isTrue: false,
+    explanation: "MITO: Operan a escala industrial con plazos equivalentes; el verdadero retraso ocurre al buscar alternativas de urgencia ante una auditoría."
+  },
+  {
+    id: "b5_1", unit: 5, type: "bucket", mechLabel: "🌈 Clasificador DEI",
+    prompt: "Un cliente en silla de ruedas pide ayuda para alcanzar un artículo alto y se lo acercas con naturalidad, sin condescendencia. ¿Qué aplicas?",
+    buckets: [
+      { id: "DIV", icon: "👥", label: "Solo Diversidad", sub: "Observar diferencias" },
+      { id: "EQ_INC", icon: "🤝", label: "Equidad + Inclusión", sub: "Acceso adaptado y trato natural" },
+      { id: "FAV", icon: "⭐", label: "Favoritismo", sub: "Trato exagerado" }
+    ],
+    correctId: "EQ_INC",
+    explanation: "Equidad es eliminar barreras para dar las mismas oportunidades; Inclusión es hacerlo con naturalidad y respeto."
+  },
+  {
+    id: "b5_2", unit: 5, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«La regla del 'folio en blanco' dice que si no puedes explicar una decisión por escrito ante un auditor con naturalidad, no debes tomarla.»",
+    isTrue: true,
+    explanation: "REALIDAD: Si un descuento o acuerdo requiere ocultarse o maquillarse en el sistema, es una señal de alarma de gobernanza."
+  },
+  {
+    id: "b5_3", unit: 5, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«Si ves a un compañero aplicar descuentos irregulares 'de amigo', callarte para no meterte en líos es una postura neutral que no afecta a la empresa.»",
+    isTrue: false,
+    explanation: "MITO: El silencio no es neutral; refuerza una cultura de miedo donde los fallos crecen hasta estallar en una auditoría."
+  },
+  {
+    id: "b5_4", unit: 5, type: "sort", mechLabel: "🏛️ Pirámide del Bienestar",
+    prompt: "Ordena de BASE (1º a asegurar) a CIMA (último nivel) el bienestar laboral en tienda:",
+    items: [
+      "Condiciones físicas y ergonomía (calzado, altura de mostrador, micropausas)",
+      "Seguridad y previsibilidad laboral (turnos comunicados con antelación)",
+      "Clima de equipo, reconocimiento y propósito alineado con valores"
+    ],
+    explanation: "Primero se cubren los cimientos físicos y de horarios; sin ellos, los talleres de motivación generan escepticismo."
+  },
+  {
+    id: "b5_5", unit: 5, type: "cards", mechLabel: "🧘 Ergonomía en Tienda",
+    prompt: "¿Qué hábito físico y mental protege tu salud durante jornadas intensas en punto de venta?",
+    options: [
+      { icon: "🦵", title: "Flexionar rodillas al levantar cajas, codo a 90° en caja y micropausas de 30 segundos." },
+      { icon: "🏃", title: "Evitar cualquier pausa durante 8 horas para no perder ventas." },
+      { icon: "📦", title: "Doblar solo la espalda al recoger mercancía del suelo." }
+    ],
+    correctIdx: 0,
+    explanation: "Un equipo descansado y sin sobrecarga atiende mejor y comete menos errores en caja."
+  },
+  {
+    id: "b5_6", unit: 5, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«El Canal Ético permite reportar irregularidades de forma confidencial sin pasar necesariamente por el jefe directo y protege frente a represalias.»",
+    isTrue: true,
+    explanation: "REALIDAD: Es una herramienta clave de gobernanza para construir una cultura de confianza y corregir riesgos a tiempo."
+  },
+  {
+    id: "b5_7", unit: 5, type: "tf", mechLabel: "⚡ Mito o Realidad",
+    prompt: "«En atención al cliente, Equidad significa tratar exactamente igual a todo el mundo sin adaptar nunca la comunicación ni el acceso.»",
+    isTrue: false,
+    explanation: "MITO: Equidad no es igualdad rígida; es dar a cada persona lo que necesita (ej. catálogo en letra grande o ayuda física) para tener las mismas oportunidades."
+  },
+  {
+    id: "b5_8", unit: 5, type: "cards", mechLabel: "⚖️ Integridad Comercial",
+    prompt: "Un proveedor te ofrece una comida cara a cambio de adjudicarle un pedido sin pedir los 3 presupuestos internos. ¿Qué haces?",
+    options: [
+      { icon: "🛡️", title: "Rechazar la atención y exigir el comparativo transparente de 3 presupuestos." },
+      { icon: "🤫", title: "Aceptar si el precio final parece razonable." },
+      { icon: "📝", title: "Adjudicarlo sin dejar registro escrito." }
+    ],
+    correctIdx: 0,
+    explanation: "Prevenir conflictos de interés y favoritismos protege la confianza de clientes, auditores y la propia marca."
+  }
+];
+
+// =========================================================================
+// ESTADO DE LA APLICACIÓN
+// =========================================================================
+let state = {
+  email: "",
+  dept: "",
+  selectedBlockId: 1,
+  timerId: null,
+  secondsLeft: 0,
+  challenges: [],
+  qIdx: 0,
+  score: 0,
+  correctCount: 0,
+  streak: 0,
+  quizStartTime: null,
+  seenIdsByBlock: {},
+  answersDetail: [],
+  lastRecord: null,
+  adminKeySession: "",
+  adminAllRecords: []
+};
+
+const screens = {
+  intro: document.getElementById("introScreen"),
+  briefing: document.getElementById("briefingScreen"),
+  quiz: document.getElementById("quizScreen"),
+  result: document.getElementById("resultScreen"),
+  admin: document.getElementById("adminScreen")
+};
+
+function switchScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove("active"));
+  screens[name].classList.add("active");
+}
+
+function shuffle(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function formatMMSS(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function startTimer(seconds, icon, onExpire) {
+  clearInterval(state.timerId);
+  state.secondsLeft = seconds;
+  const pill = document.getElementById("timerPill");
+  const txt = document.getElementById("timerText");
+  document.getElementById("phaseIcon").textContent = icon;
+  pill.style.display = "flex";
+  pill.classList.remove("urgent");
+  txt.textContent = formatMMSS(state.secondsLeft);
+
+  state.timerId = setInterval(() => {
+    state.secondsLeft--;
+    txt.textContent = formatMMSS(Math.max(0, state.secondsLeft));
+    if (state.secondsLeft <= 45) pill.classList.add("urgent");
+    if (state.secondsLeft <= 0) {
+      clearInterval(state.timerId);
+      onExpire();
+    }
+  }, 1000);
+}
+
+// Progreso personal local (solo para mostrar medallas propias del jugador en su navegador)
+function getMyLocalProgress() {
+  try { return JSON.parse(localStorage.getItem(LOCAL_PROGRESS_KEY)) || {}; }
+  catch { return {}; }
+}
+
+function saveMyLocalProgress(email, blockId, score) {
+  const data = getMyLocalProgress();
+  const key = `${email.toLowerCase()}_b${blockId}`;
+  data[key] = Math.max(data[key] || 0, score);
+  localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify(data));
+}
+
+// =========================================================================
+// DETECTOR DE CORREO DE CARLOS MORANT (SOLO MUESTRA ACCESO A ÉL)
+// =========================================================================
+const emailInputEl = document.getElementById("emailInput");
+const adminQuickBanner = document.getElementById("adminQuickBanner");
+
+emailInputEl.addEventListener("input", () => {
+  const val = emailInputEl.value.trim().toLowerCase();
+  adminQuickBanner.style.display = (val === ADMIN_EMAIL.toLowerCase()) ? "flex" : "none";
+  renderBlocksGrid();
+});
+
+// =========================================================================
+// RENDERIZAR BLOQUES
+// =========================================================================
+function renderBlocksGrid() {
+  const grid = document.getElementById("blocksGrid");
+  const myProg = getMyLocalProgress();
+  const currentEmail = emailInputEl.value.trim().toLowerCase();
+  grid.innerHTML = "";
+
+  BLOCKS.forEach(b => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "block-card" + (b.isGlobal ? " global" : "") + (state.selectedBlockId === b.id ? " selected" : "");
+
+    const bestScore = currentEmail ? myProg[`${currentEmail}_b${b.id}`] : undefined;
+
+    card.innerHTML = `
+      <span class="block-badge">${b.badge}</span>
+      <h3>${b.title}</h3>
+      <p>${b.desc}</p>
+      <div class="block-status">${bestScore !== undefined ? `✅ Tu mejor nota: ${bestScore}/100` : "⚪ Pendiente de entrenar"}</div>
+    `;
+    card.onclick = () => {
+      state.selectedBlockId = b.id;
+      renderBlocksGrid();
+    };
+    grid.appendChild(card);
+  });
+}
+
+// =========================================================================
+// FASE 1: CÁPSULA VISUAL
+// =========================================================================
+function startBlockBriefing() {
+  const block = BLOCKS.find(b => b.id === state.selectedBlockId) || BLOCKS[0];
+  document.getElementById("visualSlideContainer").innerHTML = `
+    <span class="visual-tag">${block.visualTag} · 3 min de lectura visual</span>
+    <h2>${block.visualTitle}</h2>
+    ${block.visualHtml}
+  `;
+  document.getElementById("streakPill").style.display = "none";
+  switchScreen("briefing");
+  startTimer(180, "📘", () => startBlockGame());
+}
+
+document.getElementById("backToBlocksBtn").onclick = () => {
+  clearInterval(state.timerId);
+  document.getElementById("timerPill").style.display = "none";
+  renderBlocksGrid();
+  switchScreen("intro");
+};
+
+document.getElementById("goToGameBtn").onclick = () => startBlockGame();
+
+// =========================================================================
+// FASE 2: JUEGO INTERACTIVO Y CAPTURA DE CADA RESPUESTA
+// =========================================================================
+function pickNewChallenges(blockId) {
+  const isGlobal = blockId === 0;
+  const count = isGlobal ? 10 : 6;
+  let pool = isGlobal ? [...QUESTION_POOL] : QUESTION_POOL.filter(q => q.unit === blockId);
+
+  const seen = state.seenIdsByBlock[blockId] || [];
+  let unseen = pool.filter(q => !seen.includes(q.id));
+
+  if (unseen.length < count) {
+    const lastPlayed = seen.slice(-count);
+    unseen = pool.filter(q => !lastPlayed.includes(q.id));
+    state.seenIdsByBlock[blockId] = [];
+  }
+
+  let selected;
+  if (isGlobal) {
+    selected = [];
+    for (let u = 1; u <= 5; u++) {
+      const uUnseen = shuffle(unseen.filter(q => q.unit === u));
+      const uAll = shuffle(pool.filter(q => q.unit === u));
+      const merged = [...uUnseen, ...uAll.filter(x => !uUnseen.includes(x))];
+      selected = selected.concat(merged.slice(0, 2));
+    }
+    selected = shuffle(selected);
+  } else {
+    selected = shuffle(unseen).slice(0, count);
+  }
+
+  state.seenIdsByBlock[blockId] = [...(state.seenIdsByBlock[blockId] || []), ...selected.map(q => q.id)];
+  return selected;
+}
+
+function startBlockGame() {
+  state.challenges = pickNewChallenges(state.selectedBlockId);
+  state.qIdx = 0;
+  state.score = 0;
+  state.correctCount = 0;
+  state.streak = 0;
+  state.answersDetail = [];
+  state.quizStartTime = Date.now();
+
+  const streakPill = document.getElementById("streakPill");
+  streakPill.style.display = "inline-block";
+  streakPill.textContent = "🔥 Racha: 0";
+
+  switchScreen("quiz");
+  startTimer(300, "🎮", () => finishBlockGame());
+  renderChallenge();
+}
+
+function renderChallenge() {
+  const ch = state.challenges[state.qIdx];
+  const total = state.challenges.length;
+
+  document.getElementById("qProgressLabel").textContent = `Reto ${state.qIdx + 1} de ${total}`;
+  document.getElementById("mechBadge").textContent = ch.mechLabel;
+  document.getElementById("quizProgressFill").style.width = `${(state.qIdx / total) * 100}%`;
+  document.getElementById("challengePrompt").textContent = ch.prompt;
+
+  const fb = document.getElementById("feedbackPanel");
+  fb.style.display = "none";
+  fb.className = "feedback-panel";
+
+  const nextBtn = document.getElementById("nextChallengeBtn");
+  nextBtn.style.display = "none";
+  nextBtn.textContent = state.qIdx === total - 1 ? "Finalizar y Enviar Resultados 🏆" : "Siguiente reto →";
+
+  const area = document.getElementById("interactiveArea");
+  area.innerHTML = "";
+
+  if (ch.type === "cards") {
+    const mapped = shuffle(ch.options.map((opt, idx) => ({ ...opt, isOk: idx === ch.correctIdx })));
+    const grid = document.createElement("div");
+    grid.className = "cards-choice-grid";
+    mapped.forEach(item => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "choice-card";
+      card.innerHTML = `<span class="c-icon">${item.icon}</span><span class="c-title">${item.title}</span>`;
+      card.onclick = () => {
+        grid.querySelectorAll(".choice-card").forEach((c, i) => {
+          c.disabled = true;
+          if (mapped[i].isOk) c.classList.add("correct");
+          else if (c === card) c.classList.add("wrong");
+        });
+        resolveChallenge(item.isOk, ch, item.title);
+      };
+      grid.appendChild(card);
+    });
+    area.appendChild(grid);
+  }
+
+  else if (ch.type === "bucket") {
+    const bucketsShuffled = shuffle(ch.buckets);
+    const grid = document.createElement("div");
+    grid.className = "buckets-grid";
+    bucketsShuffled.forEach(b => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "bucket-btn";
+      btn.innerHTML = `<span class="b-icon">${b.icon}</span><span class="b-label">${b.label}</span><span class="b-sub">${b.sub}</span>`;
+      btn.onclick = () => {
+        const isOk = b.id === ch.correctId;
+        grid.querySelectorAll(".bucket-btn").forEach((el, i) => {
+          el.disabled = true;
+          if (bucketsShuffled[i].id === ch.correctId) el.classList.add("correct");
+          else if (el === btn) el.classList.add("wrong");
+        });
+        resolveChallenge(isOk, ch, b.label);
+      };
+      grid.appendChild(btn);
+    });
+    area.appendChild(grid);
+  }
+
+  else if (ch.type === "tf") {
+    const grid = document.createElement("div");
+    grid.className = "tf-grid";
+    const btns = shuffle([
+      { label: "✅ REALIDAD (Verdadero)", val: true, cls: "true-opt" },
+      { label: "🚨 MITO (Falso)", val: false, cls: "false-opt" }
+    ]);
+    btns.forEach(b => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `tf-btn ${b.cls}`;
+      btn.textContent = b.label;
+      btn.onclick = () => {
+        const isOk = b.val === ch.isTrue;
+        grid.querySelectorAll(".tf-btn").forEach((el, i) => {
+          el.disabled = true;
+          if (btns[i].val === ch.isTrue) el.classList.add("correct");
+          else if (el === btn) el.classList.add("wrong");
+        });
+        resolveChallenge(isOk, ch, b.val ? "Realidad (Verdadero)" : "Mito (Falso)");
+      };
+      grid.appendChild(btn);
+    });
+    area.appendChild(grid);
+  }
+
+  else if (ch.type === "sort") {
+    let currentOrder = shuffle(ch.items.map((text, idx) => ({ text, correctPos: idx })));
+    if (currentOrder.every((it, idx) => it.correctPos === idx)) {
+      [currentOrder[0], currentOrder[1]] = [currentOrder[1], currentOrder[0]];
+    }
+
+    const listEl = document.createElement("div");
+    listEl.className = "sort-list";
+
+    const confirmBtn = document.createElement("button");
+    confirmBtn.type = "button";
+    confirmBtn.className = "btn btn-blue";
+    confirmBtn.textContent = "Confirmar orden ✔";
+
+    function renderSortItems(locked = false) {
+      listEl.innerHTML = "";
+      currentOrder.forEach((item, idx) => {
+        const row = document.createElement("div");
+        row.className = "sort-item";
+        if (locked) {
+          row.style.borderColor = item.correctPos === idx ? "var(--success)" : "var(--danger)";
+          row.style.background = item.correctPos === idx ? "var(--success-bg)" : "var(--danger-bg)";
+        }
+        row.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="sort-rank">${idx + 1}</span>
+            <span style="font-size:0.92rem; font-weight:600;">${item.text}</span>
+          </div>
+          <div class="sort-controls">
+            <button type="button" class="move-btn" ${locked || idx === 0 ? "disabled" : ""} data-dir="-1" data-idx="${idx}">↑</button>
+            <button type="button" class="move-btn" ${locked || idx === currentOrder.length - 1 ? "disabled" : ""} data-dir="1" data-idx="${idx}">↓</button>
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+
+      if (!locked) {
+        listEl.querySelectorAll(".move-btn").forEach(btn => {
+          btn.onclick = () => {
+            const i = parseInt(btn.dataset.idx);
+            const dir = parseInt(btn.dataset.dir);
+            [currentOrder[i], currentOrder[i + dir]] = [currentOrder[i + dir], currentOrder[i]];
+            renderSortItems(false);
+          };
+        });
+      }
+    }
+
+    confirmBtn.onclick = () => {
+      confirmBtn.style.display = "none";
+      const isOk = currentOrder.every((item, idx) => item.correctPos === idx);
+      renderSortItems(true);
+      resolveChallenge(isOk, ch, currentOrder.map((x, i) => `${i + 1}. ${x.text}`).join(" | "));
+    };
+
+    renderSortItems(false);
+    area.appendChild(listEl);
+    area.appendChild(confirmBtn);
+  }
+}
+
+function resolveChallenge(isOk, ch, userResponseText) {
+  if (isOk) {
+    state.correctCount++;
+    state.streak++;
+  } else {
+    state.streak = 0;
+  }
+
+  document.getElementById("streakPill").textContent = `🔥 Racha: ${state.streak}`;
+
+  // Guardamos qué contestó exactamente para el panel de Carlos Morant
+  state.answersDetail.push({
+    q: ch.prompt,
+    answer: userResponseText,
+    ok: isOk
+  });
+
+  const fb = document.getElementById("feedbackPanel");
+  fb.classList.add(isOk ? "ok" : "ko");
+  document.getElementById("fbTitle").textContent = isOk ? "✅ ¡Criterio ESG acertado!" : "❌ Oportunidad de mejora ESG";
+  document.getElementById("fbBody").textContent = ch.explanation;
+  fb.style.display = "block";
+
+  document.getElementById("quizProgressFill").style.width = `${((state.qIdx + 1) / state.challenges.length) * 100}%`;
+  document.getElementById("nextChallengeBtn").style.display = "inline-flex";
+}
+
+document.getElementById("nextChallengeBtn").onclick = () => {
+  state.qIdx++;
+  if (state.qIdx < state.challenges.length) renderChallenge();
+  else finishBlockGame();
+};
+
+// =========================================================================
+// FINALIZAR Y ENVIAR AUTOMÁTICAMENTE AL SERVIDOR + CORREO REAL
+// =========================================================================
+async function finishBlockGame() {
+  clearInterval(state.timerId);
+  document.getElementById("timerPill").style.display = "none";
+  document.getElementById("streakPill").style.display = "none";
+
+  const total = state.challenges.length;
+  state.score = Math.round((state.correctCount / total) * 100);
+  const elapsed = Math.min(300, Math.round((Date.now() - state.quizStartTime) / 1000));
+  const timeStr = formatMMSS(elapsed);
+  const blockObj = BLOCKS.find(b => b.id === state.selectedBlockId) || BLOCKS[0];
+
+  let rank = "Agente ESG en Formación";
+  if (state.score >= 85) rank = "Auditor/a Experto/a ESG 🌟";
+  else if (state.score >= 70) rank = "Embajador/a Sostenible SKLUM 🌿";
+  else if (state.score >= 50) rank = "Colaborador/a Consciente ⚡";
+
+  const record = {
+    id: "SKL-" + Math.random().toString(36).substring(2, 7).toUpperCase(),
+    date: new Date().toLocaleString("es-ES"),
+    email: state.email,
+    dept: state.dept,
+    blockId: blockObj.id,
+    blockName: `${blockObj.badge}: ${blockObj.title}`,
+    score: state.score,
+    correct: `${state.correctCount}/${total}`,
+    rank: rank,
+    time: timeStr,
+    answersDetail: state.answersDetail
+  };
+
+  state.lastRecord = record;
+  saveMyLocalProgress(state.email, blockObj.id, state.score);
+
+  document.getElementById("finalRank").textContent = rank;
+  document.getElementById("finalScoreVal").textContent = state.score;
+  document.getElementById("finalSummaryMeta").textContent =
+    `${blockObj.badge} (${state.correctCount}/${total} aciertos) · ${state.email} · Área: ${state.dept}`;
+
+  switchScreen("result");
+  await sendResultToBackend(record, true);
+}
+
+async function sendResultToBackend(record, sendEmailNow) {
+  const statusBox = document.getElementById("syncStatusBox");
+  const resendBtn = document.getElementById("resendEmailBtn");
+  resendBtn.disabled = true;
+
+  if (!API_URL || API_URL.includes("PEGA_AQUI")) {
+    statusBox.className = "sync-status err";
+    statusBox.textContent = "⚠️ Falta pegar tu URL de Google Apps Script en API_URL para activar el envío automático de correo y guardado en nube.";
+    resendBtn.disabled = false;
+    return;
+  }
+
+  statusBox.className = "sync-status";
+  statusBox.textContent = "⏳ Registrando respuestas y enviando correo certificado...";
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "submit",
+        record: record,
+        sendEmail: sendEmailNow
+      })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      statusBox.className = "sync-status ok";
+      statusBox.textContent = `✅ ¡Listo! Respuestas registradas y certificado enviado automáticamente a ${record.email}.`;
+    } else {
+      throw new Error(data.error || "Error servidor");
+    }
+  } catch (err) {
+    statusBox.className = "sync-status err";
+    statusBox.textContent = "⚠️ No se pudo conectar con el servidor. Pulsa 'Reenviar certificado' para reintentar.";
+  } finally {
+    resendBtn.disabled = false;
+  }
+}
+
+document.getElementById("resendEmailBtn").onclick = () => {
+  if (state.lastRecord) sendResultToBackend(state.lastRecord, true);
+};
+
+document.getElementById("repeatNewQuestionsBtn").onclick = () => startBlockGame();
+document.getElementById("chooseAnotherBlockBtn").onclick = () => {
+  renderBlocksGrid();
+  switchScreen("intro");
+};
+
+// =========================================================================
+// DASHBOARD EXCLUSIVO CARLOS MORANT (VALIDADO EN EL SERVIDOR)
+// =========================================================================
+document.getElementById("openAdminLoginBtn").onclick = async () => {
+  const currentEmail = emailInputEl.value.trim().toLowerCase();
+  if (currentEmail !== ADMIN_EMAIL.toLowerCase()) return;
+
+  const secret = state.adminKeySession || prompt("🔐 Introduce tu Clave Secreta de Administrador (configurada en tu Google Apps Script):");
+  if (!secret) return;
+
+  await loadAdminDashboard(secret);
+};
+
+async function loadAdminDashboard(secretKey) {
+  if (!API_URL || API_URL.includes("PEGA_AQUI")) {
+    alert("Primero debes configurar API_URL con tu enlace de Google Apps Script.");
+    return;
+  }
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "admin_fetch",
+        adminEmail: ADMIN_EMAIL,
+        secretKey: secretKey
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      state.adminKeySession = "";
+      alert("❌ " + (data.error || "Clave incorrecta"));
+      return;
+    }
+
+    state.adminKeySession = secretKey;
+    state.adminAllRecords = data.records || [];
+    renderAdminTable();
+    switchScreen("admin");
+  } catch (err) {
+    alert("Error de conexión al cargar el Dashboard.");
+  }
+}
+
+document.getElementById("refreshAdminBtn").onclick = () => {
+  if (state.adminKeySession) loadAdminDashboard(state.adminKeySession);
+};
+
+function getFilteredAdminRecords() {
+  const fEmail = document.getElementById("filterEmail").value.trim().toLowerCase();
+  const fDept = document.getElementById("filterDept").value;
+  const fBlock = document.getElementById("filterBlock").value;
+
+  return state.adminAllRecords.filter(r => {
+    const matchEmail = !fEmail || (r.email || "").toLowerCase().includes(fEmail);
+    const matchDept = !fDept || r.dept === fDept;
+    const matchBlock = !fBlock || (r.blockName || "").includes(fBlock);
+    return matchEmail && matchDept && matchBlock;
+  });
+}
+
+function renderAdminTable() {
+  const recs = getFilteredAdminRecords();
+  document.getElementById("kpiTotal").textContent = recs.length;
+
+  const uniqueEmails = new Set(recs.map(r => (r.email || "").toLowerCase()));
+  document.getElementById("kpiUsers").textContent = uniqueEmails.size;
+
+  const avg = recs.length ? Math.round(recs.reduce((a, b) => a + (Number(b.score) || 0), 0) / recs.length) : 0;
+  const passRate = recs.length ? Math.round((recs.filter(r => Number(r.score) >= 70).length / recs.length) * 100) : 0;
+  document.getElementById("kpiAvg").textContent = avg;
+  document.getElementById("kpiPass").textContent = `${passRate}%`;
+
+  const tbody = document.getElementById("adminTableBody");
+  tbody.innerHTML = "";
+
+  if (!recs.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">No hay registros para estos filtros.</td></tr>`;
+    return;
+  }
+
+  recs.forEach((r, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.date || ""}</td>
+      <td><strong>${r.email || ""}</strong></td>
+      <td>${r.dept || ""}</td>
+      <td>${r.blockName || ""}</td>
+      <td><strong>${r.score}/100</strong> <span style="color:var(--text-muted);font-size:0.78rem;">(${r.correct})</span></td>
+      <td><button type="button" class="btn btn-outline btn-sm" data-idx="${idx}">👁️ Ver respuestas</button></td>
+    `;
+    tr.querySelector("button").onclick = () => openAnswersModal(r);
+    tbody.appendChild(tr);
+  });
+}
+
+["filterEmail", "filterDept", "filterBlock"].forEach(id => {
+  document.getElementById(id).addEventListener("input", renderAdminTable);
+  document.getElementById(id).addEventListener("change", renderAdminTable);
+});
+
+function openAnswersModal(record) {
+  document.getElementById("modalTitle").textContent = `${record.email} · ${record.score}/100`;
+  document.getElementById("modalSub").textContent = `${record.dept} | ${record.blockName} | Fecha: ${record.date}`;
+  const list = document.getElementById("modalAnswersList");
+  list.innerHTML = "";
+
+  const details = Array.isArray(record.answersDetail) ? record.answersDetail : [];
+  if (!details.length) {
+    list.innerHTML = `<p style="color:var(--text-muted);">Sin desglose detallado para esta partida.</p>`;
+  } else {
+    details.forEach((item, i) => {
+      const div = document.createElement("div");
+      div.className = `ans-item ${item.ok ? "ok" : "ko"}`;
+      div.innerHTML = `
+        <strong>${i + 1}. ${item.ok ? "✅ Acierto" : "❌ Fallo"}:</strong> ${item.q}<br>
+        <span style="color:var(--text-muted);">Respuesta elegida: <em>${item.answer}</em></span>
+      `;
+      list.appendChild(div);
+    });
+  }
+  document.getElementById("detailModal").classList.add("open");
+}
+
+document.getElementById("closeModalBtn").onclick = () => {
+  document.getElementById("detailModal").classList.remove("open");
+};
+
+document.getElementById("exitAdminBtn").onclick = () => {
+  renderBlocksGrid();
+  switchScreen("intro");
+};
+
+document.getElementById("exportCsvBtn").onclick = () => {
+  const recs = getFilteredAdminRecords();
+  if (!recs.length) return alert("No hay datos para exportar.");
+
+  const headers = ["ID", "Fecha", "Correo", "Area", "Bloque", "Puntuacion", "Aciertos", "Nivel", "Tiempo", "Resumen_Respuestas"];
+  const rows = recs.map(r => {
+    const ansSummary = (r.answersDetail || [])
+      .map((a, i) => `P${i + 1}(${a.ok ? "OK" : "FALLO"}): ${a.answer}`)
+      .join(" || ")
+      .replace(/"/g, '""');
+    return [
+      r.id, `"${r.date}"`, r.email, `"${r.dept}"`, `"${r.blockName}"`, r.score, r.correct, `"${r.rank}"`, r.time, `"${ansSummary}"`
+    ].join(";");
+  });
+
+  const csv = "\uFEFF" + [headers.join(";"), ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `SKLUM_ESG_Resultados_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+};
+
+// =========================================================================
+// INICIALIZACIÓN
+// =========================================================================
+window.addEventListener("DOMContentLoaded", () => {
+  renderBlocksGrid();
+});
+
+document.getElementById("startMissionBtn").onclick = () => {
+  const emailVal = emailInputEl.value.trim().toLowerCase();
+  const err = document.getElementById("emailErr");
+  const validFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+  const validDomain = !REQUIRE_SKLUM_DOMAIN || emailVal.endsWith("@sklum.com");
+
+  if (!validFormat || !validDomain) {
+    err.style.display = "block";
+    emailInputEl.focus();
+    return;
+  }
+  err.style.display = "none";
+  state.email = emailVal;
+  state.dept = document.getElementById("deptSelect").value;
+  startBlockBriefing();
+};
+</script>
+</body>
+</html>
